@@ -1,0 +1,58 @@
+host: 127.0.0.1
+service:
+  name: "Register"
+  log: /var/log/uni.register.log
+  secret-file: auth.secret
+  method: HS256
+  exp-at: 720h
+  apis:
+    RegisterByEmail:
+      name: "RegisterByEmail"
+      path: "/register/email"
+      method: "POST"
+      ratelimit:
+        delta: 1000
+        duration: 1s
+      breaker:
+        name: "RegisterByEmail"
+        timeout: 30s
+http:
+  name: "Register-HTTP"
+  port: 10002
+  read-timeout: 15s
+  write-timeout: 15s
+rpc:
+  name: "Register-GRPC"
+  port: 50052
+mongo:
+  auth:
+    username: uni
+    password: secret
+  hosts: ["localhost:27017"]
+  database: uni
+  collection: users
+  connect-timeout: 30s
+
+consul:
+  agent:
+    address: "127.0.0.1"
+    port: 50052
+  client:
+    address: "localhost:8500"
+    scheme: "http"
+
+prometheus:
+  path: "/metrics"
+  counter-options:
+    RegisterByEmail:
+      namespace: authentication
+      name: by_email
+      help: "Total requests deal with by register_by_email"
+      subsystem: register
+  summary-options:
+    RegisterByEmail:
+      namespace: authentication
+      name: by_email_duration
+      help: "register_by_email duration in seconds"
+      subsystem: register
+      label-names: ["success"]

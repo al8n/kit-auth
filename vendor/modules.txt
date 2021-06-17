@@ -1,0 +1,10 @@
+# github.com/google/uuid v1.1.2
+## explicit
+github.com/google/uuid
+# github.com/opentracing/opentracing-go v1.2.0
+## explicit
+github.com/opentracing/opentracing-go
+github.com/opentracing/opentracing-go/log
+# go.mongodb.org/mongo-driver v1.4.4
+## explicit
+go.mongodb.org/mongo-driver/bson/primitive

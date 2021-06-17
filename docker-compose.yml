@@ -1,0 +1,99 @@
+version: "3"
+services:
+  jaeger:
+    image: jaegertracing/all-in-one
+    container_name: "uni-jaeger"
+    ports:
+      - 6831:6831/udp
+      - 16686:16686
+      - 14268:14268
+    networks:
+      - uni
+
+  redis:
+    image: redis:alpine
+    container_name: "uni-redis"
+    networks:
+      - uni
+    volumes:
+      - uni-redis
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo
+    container_name: "uni-mongo"
+    networks:
+      - uni
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: uni
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - uni-mongo:/data/db
+    ports:
+      - "27017:27017"
+
+  consul:
+    image: consul
+    container_name: "uni-consul"
+    command: agent -server -bootstrap -ui -client=0.0.0.0
+    ports:
+      - 8500:8500
+      - 8600:8600/udp
+    networks:
+      - uni
+
+  cadvisor:
+    image: "gcr.io/google-containers/cadvisor"
+    container_name: "uni-cadvisor"
+    ports:
+      - "9091:8080"
+    networks:
+      - uni
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+  prometheus:
+    image: prom/prometheus
+    container_name: "uni-prometheus"
+    ports:
+      - "9090:9090"
+    networks:
+      - uni
+    volumes:
+      - /Users/liuguanyan/Desktop/Development/uni/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - cadvisor
+      - grafana
+
+  grafana:
+    image: grafana/grafana
+    container_name: "uni-grafana"
+    ports:
+      - "9093:3000"
+    networks:
+      - uni
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=uni
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: "uni-exporter"
+    ports:
+      - "9092:9100"
+    networks:
+      - uni
+
+networks:
+  uni:
+    external: false
+
+volumes:
+  uni-redis:
+    external: false
+  uni-mongo:
+    external: false

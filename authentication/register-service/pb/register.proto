@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package pb;
+
+service Register {
+    rpc SendOTPToEmail(SendOTPToEmailRequest) returns (SendOTPResponse);
+    rpc SendOTPToPhone(SendOTPToPhoneRequest) returns (SendOTPResponse);
+    rpc RegisterByEmail(RegisterByEmailRequest) returns (AuthenticationResponse);
+    rpc RegisterByPhone(RegisterByPhoneRequest) returns (AuthenticationResponse);
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    string username = 3;
+    string phone = 4;
+    string avatar = 5;
+    string description = 6;
+    uint32 age = 7;
+    uint32 gender = 8;
+    string university = 9;
+    string major = 10;
+    string city = 11;
+    string country = 12;
+    int64 enroll_at = 13;
+    bool membership = 14;
+    int64 membership_at = 15;
+    int64 membership_expired_at = 16;
+    int64 created_at = 17;
+}
+
+message SendOTPToEmailRequest {
+    string email = 1;
+}
+
+message SendOTPToPhoneRequest {
+    string prefix = 1;
+    string phone = 2;
+}
+
+message SendOTPResponse {
+    string otp = 1;
+    string error = 2;
+}
+
+message RegisterByEmailRequest {
+    string email = 1;
+    string otp = 2;
+}
+
+message RegisterByPhoneRequest {
+    string prefix = 1;
+    string phone = 2;
+    string otp = 3;
+}
+
+message AuthenticationResponse {
+    string token = 1;
+    User user = 2;
+    string error = 3;
+}

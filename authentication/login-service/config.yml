@@ -1,0 +1,58 @@
+host: 127.0.0.1
+service:
+  name: "Login"
+  log: /var/log/uni.login.log
+  secret-file: auth.secret
+  method: HS256
+  exp-at: 720h
+  apis:
+    LoginByEmail:
+      name: "LoginByEmail"
+      path: "/login/email"
+      method: "POST"
+      ratelimit:
+        delta: 1000
+        duration: 1s
+      breaker:
+        name: "LoginByEmail"
+        timeout: 30s
+http:
+  name: "Login-HTTP"
+  port: 10001
+  read-timeout: 15s
+  write-timeout: 15s
+rpc:
+  name: "Login-GRPC"
+  port: 50051
+mongo:
+  auth:
+    username: uni
+    password: secret
+  hosts: ["localhost:27017"]
+  database: uni
+  collection: users
+  connect-timeout: 30s
+
+consul:
+  agent:
+    address: "127.0.0.1"
+    port: 50051
+  client:
+    address: "localhost:8500"
+    scheme: "http"
+
+prometheus:
+  path: "/metrics"
+  counter-options:
+    LoginByEmail:
+      namespace: authentication
+      name: by_email
+      help: "Total requests deal with by login_by_email"
+      subsystem: login
+  summary-options:
+    LoginByEmail:
+      namespace: authentication
+      name: by_email_duration
+      help: "login_by_email duration in seconds"
+      subsystem: login
+      label-names: ["success"]

@@ -1,46 +1,42 @@
 package server
 
 import (
+	"io"
+	"net/http"
 	"sync"
 )
 
 var (
 	once sync.Once
-	s *server
+	s *Server
 )
 
-type server struct {
-	onceInit, onceServe, onceClose sync.Once
+type Server struct {
+	tracerCloser io.Closer
+	handler http.Handler
+	wg sync.WaitGroup
 }
 
-func Get() *server  {
+func Get() *Server  {
 	once.Do(func() {
-		s = &server{}
+		s = &Server{}
 	})
 	return s
 }
 
 
 
-func (s *server) Init() (err error) {
-	s.onceInit.Do(func() {
-		
-	})
+func (s *Server) Init() (err error) {
 	return nil
 }
 
-func (s *server) Serve() (err error) {
-	s.onceServe.Do(func() {
-		
-	})
+func (s *Server) Serve() (err error) {
 	return nil
 }
 
-func (s *server) Close() {
-	s.onceClose.Do(func() {
-		
-	})
-	return
+func (s *Server) Close() (err error) {
+	s.wg.Done()
+	return nil
 }
 
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	boot "github.com/al8n/micro-boot"
 	"github.com/al8n/kit-auth/authentication/register-service/config"
 	"github.com/al8n/kit-auth/authentication/register-service/pkg/server"
+	boot "github.com/al8n/micro-boot"
 	"log"
 )
 

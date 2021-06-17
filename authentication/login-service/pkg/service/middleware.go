@@ -67,7 +67,7 @@ func (mw tracingMiddleware) LoginByEmail(ctx context.Context, email, password st
 
 	token, userInfo, err = mw.next.LoginByEmail(spanCtx, email, password)
 	if err != nil {
-		utils.SetTracerSpanError(span, err)
+		utils.SetTracerSpanError(span)
 	} else {
 		span.SetTag("User ID", userInfo.ID)
 	}

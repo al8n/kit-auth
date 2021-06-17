@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"github.com/al8n/kit-auth/authentication/common"
 	bootconsul "github.com/al8n/micro-boot/consul"
 	bootflag "github.com/al8n/micro-boot/flag"
 	bootredis "github.com/al8n/micro-boot/goredis"
@@ -10,7 +11,6 @@ import (
 	boothttp "github.com/al8n/micro-boot/http"
 	bootmongo "github.com/al8n/micro-boot/mongo"
 	bootprom "github.com/al8n/micro-boot/prometheus"
-	"github.com/al8n/kit-auth/authentication/common"
 	"github.com/imdario/mergo"
 	"github.com/sony/sonyflake"
 	"gopkg.in/yaml.v3"
@@ -64,7 +64,7 @@ type Config struct {
 	Prom  bootprom.Config          `json:"prometheus" yaml:"prometheus"`
 
 	// Redis
-	Redis bootredis.ClientOptions      `json:"redis" yaml:"redis"`
+	Redis bootredis.Options      `json:"redis" yaml:"redis"`
 }
 
 func (c *Config) Initialize(name string) (err error)  {

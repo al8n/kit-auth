@@ -1,6 +1,9 @@
 package config
 
-import "sync"
+import (
+	bootflag "github.com/al8n/micro-boot/flag"
+	"sync"
+)
 
 var (
 	once, onceInit sync.Once
@@ -9,6 +12,18 @@ var (
 
 type config struct {
 	
+}
+
+func (c *config) Initialize(name string) (err error) {
+	panic("implement me")
+}
+
+func (c *config) BindFlags(fs *bootflag.FlagSet) {
+	panic("implement me")
+}
+
+func (c *config) Parse() (err error) {
+	panic("implement me")
 }
 
 func Get() *config {

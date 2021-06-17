@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	bootapi "github.com/al8n/micro-boot/api"
 	loginservice "github.com/al8n/kit-auth/authentication/login-service/pkg/service"
 	"github.com/al8n/kit-auth/models"
 	"github.com/al8n/kit-auth/models/requests"
 	"github.com/al8n/kit-auth/models/responses"
 	"github.com/al8n/kit-auth/utils"
+	bootapi "github.com/al8n/micro-boot/api"
 	"github.com/go-kit/kit/circuitbreaker"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
@@ -28,7 +28,7 @@ type Set struct {
 	LoginByEmailEndpoint endpoint.Endpoint
 }
 
-func (s Set) LoginByEmail(ctx context.Context, email, password string) (token string, userInfo *models.UserInfo, err error) {
+func (s Set) LoginByEmail(ctx context.Context, email, otp string) (token string, userInfo *models.UserInfo, err error) {
 	var (
 		resp interface{}
 		response responses.AuthenticationResponse
@@ -36,7 +36,7 @@ func (s Set) LoginByEmail(ctx context.Context, email, password string) (token st
 
 	resp, err = s.LoginByEmailEndpoint(ctx, requests.LoginByEmailRequest{
 		Email:    email,
-		Password: password,
+		OTP: otp,
 	})
 
 	response = resp.(responses.AuthenticationResponse)
@@ -82,7 +82,7 @@ func MakeLoginByEmailEndpoint(svc loginservice.Service) endpoint.Endpoint  {
 		)
 
 		req = request.(requests.LoginByEmailRequest)
-		token, user, err = svc.LoginByEmail(ctx, req.Email, req.Password)
+		token, user, err = svc.LoginByEmail(ctx, req.Email, req.OTP)
 		if err != nil {
 			return responses.AuthenticationResponse{
 				Error: err.Error(),

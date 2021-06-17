@@ -10,7 +10,7 @@ import (
 func LoginByEmailReq2pbReq(req requests.LoginByEmailRequest) (pbReq *pb.LoginByEmailRequest)  {
 	pbReq = &pb.LoginByEmailRequest{}
 	pbReq.Email = req.Email
-	pbReq.Password = req.Password
+	pbReq.Otp = req.OTP
 	return
 }
 

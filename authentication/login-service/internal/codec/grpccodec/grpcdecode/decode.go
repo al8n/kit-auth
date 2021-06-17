@@ -16,6 +16,6 @@ func LoginByEmailRequest(_ context.Context, grpcReq interface{}) (interface{}, e
 	req := grpcReq.(*pb.LoginByEmailRequest)
 	return requests.LoginByEmailRequest{
 		Email: req.Email,
-		Password: req.Password,
+		OTP: req.Otp,
 	}, nil
 }
